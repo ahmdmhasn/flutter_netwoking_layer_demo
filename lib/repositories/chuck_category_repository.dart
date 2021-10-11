@@ -9,13 +9,17 @@ class ChuckCategoryRepository {
 
   Future<ChuckCategories> fetchCategories() async {
     final json = await provider.request(
-        requestType: RequestType.GET, path: 'jokes/categories');
+      requestType: RequestType.GET,
+      path: 'jokes/categories',
+    );
     return ChuckCategories.fromJson(json);
   }
 
   Future<Chuck> fetchChuckJoke(String category) async {
     final json = await provider.request(
-        requestType: RequestType.GET, path: 'jokes/random?category=$category');
+      requestType: RequestType.GET,
+      path: 'jokes/random?category=$category',
+    );
     return Chuck.fromJson(json);
   }
 }
