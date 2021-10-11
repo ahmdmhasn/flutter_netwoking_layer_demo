@@ -2,19 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:NetworkingLayerDemo/networking/endpoint.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 import 'networking_exceptions.dart';
 import 'request_type.dart';
 
 class ApiProvider {
   final String _baseUrl;
+  final http.Client _client;
 
-  final Client _client;
-
-  ApiProvider()
-      : _client = Client(),
-        _baseUrl = "https://api.chucknorris.io";
+  ApiProvider({
+    required String baseUrl,
+    http.Client? client,
+  })  : this._client = client ?? http.Client(),
+        this._baseUrl = baseUrl;
 
   /// Perform api request. Return dynamic type of response or throws an error if any.
   ///
@@ -62,7 +63,7 @@ class ApiProvider {
 
   /// Perform request based on request type
   ///
-  Future<Response> _performRequest(Endpoint request) async {
+  Future<http.Response> _performRequest(Endpoint request) async {
     switch (request.requestType) {
       case RequestType.GET:
         return _get(request);
@@ -77,7 +78,7 @@ class ApiProvider {
 
   /// Handle incoming http response based on status code
   ///
-  Future<dynamic> _handleResponse(Response response) async {
+  Future<dynamic> _handleResponse(http.Response response) async {
     switch (response.statusCode) {
       case 200:
         return json.decode(response.body.toString());
@@ -95,14 +96,14 @@ class ApiProvider {
 
   /// Perform get request with `RequestModel`
   ///
-  Future<Response> _get(Endpoint endpoint) => _client.get(
+  Future<http.Response> _get(Endpoint endpoint) => _client.get(
         endpoint.fullUrl,
         headers: endpoint.headers,
       );
 
   /// Perform post request with `RequestModel`
   ///
-  Future<Response> _post(Endpoint endpoint) => _client.post(
+  Future<http.Response> _post(Endpoint endpoint) => _client.post(
         endpoint.fullUrl,
         headers: endpoint.headers,
         body: json.encode(endpoint.parameters),
@@ -110,7 +111,7 @@ class ApiProvider {
 
   /// Perform put request with `RequestModel`
   ///
-  Future<Response> _put(Endpoint endpoint) => _client.put(
+  Future<http.Response> _put(Endpoint endpoint) => _client.put(
         endpoint.fullUrl,
         headers: endpoint.headers,
         body: json.encode(endpoint.parameters),
@@ -118,7 +119,7 @@ class ApiProvider {
 
   /// Perform delete request with `RequestModel`
   ///
-  Future<Response> _delete(Endpoint endpoint) => _client.delete(
+  Future<http.Response> _delete(Endpoint endpoint) => _client.delete(
         endpoint.fullUrl,
         headers: endpoint.headers,
         body: json.encode(endpoint.parameters),
