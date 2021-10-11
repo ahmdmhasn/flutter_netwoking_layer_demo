@@ -1,4 +1,4 @@
-import 'package:NetworkingLayerDemo/networking/request_type.dart';
+import 'request_type.dart';
 
 /// Combination of request data
 ///

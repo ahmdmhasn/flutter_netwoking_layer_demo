@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:NetworkingLayerDemo/networking/endpoint.dart';
 import 'package:http/http.dart' as http;
 
+import 'endpoint.dart';
 import 'networking_exceptions.dart';
 import 'request_type.dart';
 
