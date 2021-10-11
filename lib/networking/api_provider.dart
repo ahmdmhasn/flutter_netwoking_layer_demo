@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 import 'networking_exceptions.dart';
-import 'nothing.dart';
 import 'request_type.dart';
 
 class ApiProvider {
-  final String _baseUrl; // = "https://api.chucknorris.io";
+  final String _baseUrl;
 
   final Client _client;
 
@@ -15,10 +14,12 @@ class ApiProvider {
       : _client = Client(),
         _baseUrl = "https://api.chucknorris.io";
 
+  /// Perform api request. Return dynamic type of response or throws an error if any.
+  ///
   Future<dynamic> request({
     required RequestType requestType,
     required String path,
-    dynamic parameters = Nothing,
+    dynamic parameters = const {},
     Map<String, String> headers = const {},
   }) async {
     final request = _RequestModel(
@@ -40,16 +41,18 @@ class ApiProvider {
   Future<Response> _performRequest(_RequestModel request) async {
     switch (request.requestType) {
       case RequestType.GET:
-        return get(request);
+        return _get(request);
       case RequestType.POST:
-        return post(request);
+        return _post(request);
       case RequestType.PUT:
-        return put(request);
+        return _put(request);
       case RequestType.DELETE:
-        return delete(request);
+        return _delete(request);
     }
   }
 
+  /// Handle incoming http response based on status code
+  ///
   Future<dynamic> _handleResponse(Response response) async {
     switch (response.statusCode) {
       case 200:
@@ -66,24 +69,32 @@ class ApiProvider {
     }
   }
 
-  Future<Response> get(_RequestModel request) => _client.get(
+  /// Perform get request with `RequestModel`
+  ///
+  Future<Response> _get(_RequestModel request) => _client.get(
         _fullUrl(request.path),
         headers: _headers(request.headers),
       );
 
-  Future<Response> post(_RequestModel request) => _client.post(
+  /// Perform post request with `RequestModel`
+  ///
+  Future<Response> _post(_RequestModel request) => _client.post(
         _fullUrl(request.path),
         headers: _headers(request.headers),
         body: json.encode(request.parameters),
       );
 
-  Future<Response> put(_RequestModel request) => _client.put(
+  /// Perform put request with `RequestModel`
+  ///
+  Future<Response> _put(_RequestModel request) => _client.put(
         _fullUrl(request.path),
         headers: _headers(request.headers),
         body: json.encode(request.parameters),
       );
 
-  Future<Response> delete(_RequestModel request) => _client.delete(
+  /// Perform delete request with `RequestModel`
+  ///
+  Future<Response> _delete(_RequestModel request) => _client.delete(
         _fullUrl(request.path),
         headers: _headers(request.headers),
         body: json.encode(request.parameters),
@@ -109,16 +120,18 @@ class ApiProvider {
       };
 }
 
+/// Combination of request data
+///
 class _RequestModel {
   RequestType requestType;
   String path;
-  dynamic parameters = Nothing;
+  dynamic parameters;
   Map<String, String> headers;
 
   _RequestModel({
     required this.requestType,
     required this.path,
-    this.parameters = Nothing,
+    this.parameters,
     this.headers = const {},
   });
 }
