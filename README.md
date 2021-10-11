@@ -1,10 +1,25 @@
-# first_app
+# [Flutter] Networking Layer as a Demo
 
-A new Flutter project.
+<p align="center">
+  <img src="screenshots/overview.gif" />
+</p>
+
+## Overview
+
+### Networking Features
+
+- [x] Chainable Request / Response Methods
+- [x] Get/ Post/ Put/ Delete request types
+- [x] Networking logger
+- [x] Base response management
+
+### App Features
+
+- [x] Custom Status management with BLoCs (Business Logic Components)
+- [x] Reusable Error and Loading widgets
+- [x] Base assets fetching
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
 
