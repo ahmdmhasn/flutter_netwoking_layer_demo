@@ -106,7 +106,7 @@ class _ChuckJokeWidget extends StatelessWidget {
     return Center(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20.0),
-        height: MediaQuery.of(context).size.height * 0.2,
+        // height: MediaQuery.of(context).size.height * 0.2,
         decoration: BoxDecoration(
           color: Colors.black12,
           shape: BoxShape.rectangle,
@@ -115,28 +115,32 @@ class _ChuckJokeWidget extends StatelessWidget {
             bottomRight: Radius.circular(40),
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              child: Image.network(
-                chuck?.iconUrl ?? '',
-                fit: BoxFit.cover,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            runSpacing: 10,
+            children: [
+              Container(
+                child: Image.network(
+                  chuck?.iconUrl ?? '',
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              chuck?.value ?? '',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
+              SizedBox(
+                height: 10,
               ),
-            ),
-          ],
+              Text(
+                chuck?.value ?? '',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
