@@ -25,6 +25,12 @@ class _ChuckCategoriesPageState extends State<ChuckCategoriesPage> {
   }
 
   @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -90,7 +96,7 @@ class _CategoryListWidget extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.center,
                   child: Text(
-                    categories[index] ?? '',
+                    categories[index],
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w100,
