@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart';
 
@@ -29,11 +30,32 @@ class ApiProvider {
       headers: headers,
     );
 
-    final response = await _performRequest(request);
-    final responseBody = await _handleResponse(response);
-    print(responseBody);
+    return await _requestWithLogger(request);
+  }
 
-    return responseBody;
+  /// Perform request with logging
+  ///
+  Future<dynamic> _requestWithLogger(_RequestModel request) async {
+    try {
+      print('📝️ Request: ${request.path}');
+      final responseBody = await _request(request);
+      print('🈯️️ Response: \n ${request.path} \n$responseBody');
+      return responseBody;
+    } catch (error) {
+      print('⛔️ Networking Error: $error');
+      throw error;
+    }
+  }
+
+  /// Perform request with request model
+  ///
+  Future<dynamic> _request(_RequestModel request) async {
+    try {
+      final response = await _performRequest(request);
+      return await _handleResponse(response);
+    } on SocketException catch (error) {
+      throw FetchDataException('Internet connection issue');
+    }
   }
 
   /// Perform request based on request type
@@ -65,7 +87,7 @@ class ApiProvider {
       case 500:
       default:
         throw FetchDataException(
-            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+            'Error occurred while Communication with Server with StatusCode : ${response.statusCode}');
     }
   }
 
