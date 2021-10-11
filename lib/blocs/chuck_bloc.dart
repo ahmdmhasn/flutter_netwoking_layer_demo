@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:NetworkingLayerDemo/models/chuck.dart';
-import 'package:NetworkingLayerDemo/networking/response.dart';
+import 'package:NetworkingLayerDemo/system/status.dart';
 import 'package:NetworkingLayerDemo/repositories/chuck_category_repository.dart';
 
 class ChuckBloc {
   ChuckCategoryRepository _repository;
-  StreamController<Response<Chuck>> _controller;
+  StreamController<Status<Chuck>> _controller;
   String _category;
 
-  StreamSink<Response<Chuck>> get sink => _controller.sink;
+  StreamSink<Status<Chuck>> get sink => _controller.sink;
 
-  Stream<Response<Chuck>> get stream => _controller.stream;
+  Stream<Status<Chuck>> get stream => _controller.stream;
 
   ChuckBloc(this._category)
       : _repository = ChuckCategoryRepository(),
@@ -20,12 +20,12 @@ class ChuckBloc {
   }
 
   fetchData() async {
-    sink.add(Response.loading());
+    sink.add(Status.loading());
     try {
       final data = await _repository.fetchChuckJoke(_category);
-      sink.add(Response.completed(data));
+      sink.add(Status.completed(data));
     } catch (error) {
-      sink.add(Response.error(error.toString()));
+      sink.add(Status.error(error.toString()));
     }
   }
 
