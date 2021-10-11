@@ -12,6 +12,7 @@ class Status<T> {
   Status.loading({this.message = 'Loading'}) : status = StatusType.LOADING;
   Status.completed(this.data) : status = StatusType.COMPLETED;
   Status.error(this.message) : status = StatusType.ERROR;
+  Status.initial() : status = StatusType.COMPLETED;
 }
 
 enum StatusType { LOADING, COMPLETED, ERROR }

@@ -8,7 +8,7 @@ class NetworkingException implements Exception {
   ]);
 
   String toString() {
-    return "$_prefix$_message";
+    return "${_prefix ?? ''}${_message ?? ''}";
   }
 }
 
@@ -44,6 +44,15 @@ class InvalidInputException extends NetworkingException {
     String? message,
   ]) : super(
           "Invalid Input: ",
+          message,
+        );
+}
+
+class EmptyListException extends NetworkingException {
+  EmptyListException([
+    String? message,
+  ]) : super(
+          "Empty List",
           message,
         );
 }

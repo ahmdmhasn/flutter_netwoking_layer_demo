@@ -1,10 +1,11 @@
-import 'package:NetworkingLayerDemo/blocs/chuck_bloc.dart';
+import 'package:NetworkingLayerDemo/cubit/chuck_cubit.dart';
 import 'package:NetworkingLayerDemo/models/chuck.dart';
 import 'package:NetworkingLayerDemo/styles/assets.dart';
 import 'package:NetworkingLayerDemo/system/status.dart';
 import 'package:NetworkingLayerDemo/widgets/error_widget.dart' as errorWidget;
 import 'package:NetworkingLayerDemo/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShowChuckyJoke extends StatefulWidget {
   final String selectedCategory;
@@ -16,17 +17,17 @@ class ShowChuckyJoke extends StatefulWidget {
 }
 
 class _ShowChuckyJokeState extends State<ShowChuckyJoke> {
-  late ChuckBloc _bloc;
+  late ChuckCubit _cubit;
 
   @override
   void initState() {
     super.initState();
-    _bloc = ChuckBloc(widget.selectedCategory);
+    _cubit = ChuckCubit(category: widget.selectedCategory);
   }
 
   @override
   void dispose() {
-    _bloc.dispose();
+    _cubit.close();
     super.dispose();
   }
 
@@ -36,21 +37,18 @@ class _ShowChuckyJokeState extends State<ShowChuckyJoke> {
       appBar: AppBar(
         title: Text('Chucky Joke'),
       ),
-      body: StreamBuilder<Status<Chuck>>(
-        stream: _bloc.stream,
-        builder: (ctx, snapshot) {
-          final data = snapshot.data;
-          if (data == null) return Container();
-
-          switch (data.status) {
+      body: BlocBuilder<ChuckCubit, Status<Chuck>>(
+        bloc: _cubit,
+        builder: (ctx, state) {
+          switch (state.status) {
             case StatusType.LOADING:
               return LoadingWidget();
             case StatusType.COMPLETED:
-              return _ChuckJokeWidget(data.data);
+              return _ChuckJokeWidget(state.data);
             case StatusType.ERROR:
               return errorWidget.ErrorWidget(
-                errorMessage: data.message,
-                onRetryPressed: () => _bloc.fetchData(),
+                errorMessage: state.message,
+                onRetryPressed: () => _cubit.fetchData(),
               );
           }
         },
