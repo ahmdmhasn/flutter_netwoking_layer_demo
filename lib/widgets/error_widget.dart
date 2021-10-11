@@ -12,26 +12,29 @@ class ErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            errorMessage ?? '',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              errorMessage ?? '',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          ElevatedButton(
-            child: Text('Retry'),
-            onPressed: () => onRetryPressed(),
-          ),
-        ],
+            SizedBox(
+              height: 8,
+            ),
+            ElevatedButton(
+              child: Text('Retry'),
+              onPressed: () => onRetryPressed(),
+            ),
+          ],
+        ),
       ),
     );
   }

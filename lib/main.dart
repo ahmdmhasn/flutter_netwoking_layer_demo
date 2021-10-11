@@ -1,7 +1,6 @@
+import 'package:NetworkingLayerDemo/pages/chuck_categories_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'screens/get_chuck_categories.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,7 +15,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: GetChuckCategories(),
+      home: ChuckCategoriesPage(),
     );
   }
 }
