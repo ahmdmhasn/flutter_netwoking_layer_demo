@@ -1,4 +1,4 @@
-import 'package:NetworkingLayerDemo/blocs/chuck_category_bloc.dart';
+import 'package:NetworkingLayerDemo/cubit/chuck_category_cubit.dart';
 import 'package:NetworkingLayerDemo/models/chuck_categories.dart';
 import 'package:NetworkingLayerDemo/pages/show_chucky_joke_page.dart';
 import 'package:NetworkingLayerDemo/system/status.dart';
@@ -6,6 +6,7 @@ import 'package:NetworkingLayerDemo/widgets/error_widget.dart' as errorWidget;
 import 'package:NetworkingLayerDemo/widgets/loading_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChuckCategoriesPage extends StatefulWidget {
   const ChuckCategoriesPage({Key? key}) : super(key: key);
@@ -15,18 +16,18 @@ class ChuckCategoriesPage extends StatefulWidget {
 }
 
 class _ChuckCategoriesPageState extends State<ChuckCategoriesPage> {
-  late ChuckCategoryBloc _bloc;
+  late ChuckCategoryCubit _cubit;
 
   @override
   void initState() {
     super.initState();
 
-    _bloc = ChuckCategoryBloc();
+    _cubit = ChuckCategoryCubit();
   }
 
   @override
   void dispose() {
-    _bloc.dispose();
+    _cubit.close();
     super.dispose();
   }
 
@@ -38,24 +39,21 @@ class _ChuckCategoriesPageState extends State<ChuckCategoriesPage> {
         title: Text('Chucky Categories'),
       ),
       body: RefreshIndicator(
-        onRefresh: () => _bloc.fetchCategories(),
-        child: StreamBuilder<Status<ChuckCategories>>(
-          stream: _bloc.stream,
-          builder: (ctx, snapshot) {
-            final data = snapshot.data;
-            if (data == null) return Container();
-
-            switch (data.status) {
+        onRefresh: () => _cubit.fetchCategories(),
+        child: BlocBuilder<ChuckCategoryCubit, Status<ChuckCategories>>(
+          bloc: _cubit,
+          builder: (ctx, state) {
+            switch (state.status) {
               case StatusType.LOADING:
-                return LoadingWidget(loadingMessage: data.message);
+                return LoadingWidget(loadingMessage: state.message);
               case StatusType.COMPLETED:
                 return _CategoryListWidget(
-                  categoryList: data.data,
+                  categoryList: state.data,
                 );
               case StatusType.ERROR:
                 return errorWidget.ErrorWidget(
-                  errorMessage: data.message,
-                  onRetryPressed: _bloc.fetchCategories,
+                  errorMessage: state.message,
+                  onRetryPressed: _cubit.fetchCategories,
                 );
             }
           },
